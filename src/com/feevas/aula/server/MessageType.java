@@ -4,7 +4,8 @@ public enum MessageType {
 
     NAME("!!NAME"),
     MESSAGE("!!MSG"),
-    FILE("!!FILE");
+    FILE("!!FILE"),
+    USERLIST("!!ULIST");
     private final String name;
 
     /**

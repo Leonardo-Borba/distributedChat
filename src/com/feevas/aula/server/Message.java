@@ -8,6 +8,13 @@ public class Message {
     private String filename;
     private boolean whisper;
 
+    public Message(){}
+
+    public Message(String msg, String sender) {
+        content = msg;
+        this.sender = sender;
+    }
+
     public String getRecipient() {
         return recipient;
     }

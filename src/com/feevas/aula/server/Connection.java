@@ -43,6 +43,9 @@ public class Connection extends Thread {
                 MessagePool.queue(MessageFactory.create(message, this.username));
             }else if(message.startsWith(MessageType.FILE.getName())){
                 MessagePool.queue(MessageFactory.createFileMessage(message, this.username));
+            }else if(message.startsWith(MessageType.USERLIST.getName()))
+            {
+                MessagePool.queue(MessageFactory.createUserListMessage(message, this.username));
             }
         }
     }

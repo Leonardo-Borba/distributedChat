@@ -29,4 +29,10 @@ public class MessageFactory {
     private static List<String> splitMessage(String str) {
         return Arrays.asList( str.split("\\s+"));
     }
+
+    public static Message createUserListMessage(String message, String sender) {
+        Message msg = MessageFactory.create(message, sender);
+        msg.setRecipient(msg.getSender());
+        return msg;
+    }
 }
