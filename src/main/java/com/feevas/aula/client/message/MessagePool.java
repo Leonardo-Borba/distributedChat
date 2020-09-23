@@ -11,18 +11,31 @@
 
 package com.feevas.aula.client.message;
 
+import com.feevas.aula.client.services.UserListService;
+import com.feevas.aula.server.Message;
+import com.feevas.aula.server.MessageType;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class MessagePool {
 
-    private static LinkedBlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
+    private static LinkedBlockingQueue<Message> messageQueue = new LinkedBlockingQueue<>();
 
 
     public static void queue(String msg) {
-        messageQueue.add(msg);
+
+        if(msg.startsWith(MessageType.USERLIST.getName())){
+            UserListService.updateUserList(msg);
+        }
+        else if(msg.startsWith(MessageType.FILE.getName())){
+            messageQueue.add(MessageFactory.createFileMessage(msg));
+        }
+
+        else
+            messageQueue.add(MessageFactory.createMessage(msg));
     }
 
-    public static String getMessage(){
+    public static Message getMessage(){
         return messageQueue.remove();
     }
 

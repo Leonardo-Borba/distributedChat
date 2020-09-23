@@ -11,9 +11,12 @@ public class MessageFactory {
             List<String> messagePieces = MessageFactory.splitMessage(str);
             message.setSender(sender);
             message.setContent(messagePieces.get(messagePieces.size() -1));
-            if(messagePieces.size() == 3){
+            if(messagePieces.size() >= 3){
                 message.setRecipient(messagePieces.get(1));
+                message.setWhisper(true);
             }
+            if (str.startsWith(MessageType.MESSAGE.getName()))
+                message.setType(MessageType.MESSAGE);
 
         return message;
     }
@@ -22,6 +25,7 @@ public class MessageFactory {
 
         Message msg = MessageFactory.create(message, username);
         msg.setFilename(MessageFactory.splitMessage(message).get(2));
+        msg.setType(MessageType.FILE);
         return msg;
     }
 

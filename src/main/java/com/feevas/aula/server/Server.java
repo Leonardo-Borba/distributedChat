@@ -1,5 +1,6 @@
 package com.feevas.aula.server;
 
+import javax.xml.bind.DatatypeConverter;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -38,7 +39,6 @@ public class Server extends Thread {
 
     private void handle(Message message){
 
-        System.out.println(message.getContent());
         if(message.getRecipient() != null){
             sendPrivate(message);
         }else {
@@ -52,7 +52,7 @@ public class Server extends Thread {
 
     private void sendPrivate(Message message){
         Optional<Connection> recipient = connections.stream().filter(con -> con.getUsername().equals(message.getRecipient())).findFirst();
-        if(message.getContent().equals(MessageType.USERLIST.getName()))
+        if(message.getContent().startsWith(MessageType.USERLIST.getName()))
             recipient.ifPresent(connection -> connection.sendMessage(getActiveUsers()));
         recipient.ifPresent(connection -> connection.sendMessage(message));
     }
@@ -63,7 +63,10 @@ public class Server extends Thread {
                 connection -> builder.append(connection.getUsername() + ' ')
         );
         String activeUsers = builder.toString();
-        return new Message("!!allUsers " + Base64.getEncoder().encodeToString(activeUsers.getBytes()), "server");
+        Message message = new Message(DatatypeConverter.printBase64Binary(activeUsers.getBytes()), "server");
+        message.setWhisper(true);
+        message.setType(MessageType.USERLIST);
+        return message;
     }
 }
 

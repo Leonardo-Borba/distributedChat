@@ -24,6 +24,7 @@ public class SocketConnection {
     InboundMessageListener in = null;
     Socket socket;
     private boolean isConnected = true;
+    private NameObserver nameObserver;
 
     public SocketConnection() {
         run();
@@ -35,6 +36,7 @@ public class SocketConnection {
             socket = new Socket(HOST, PORT);
             in = new InboundMessageListener(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream());
+            nameObserver = new NameObserver(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,5 +47,24 @@ public class SocketConnection {
 
         out.println(msg);
         out.flush();
+    }
+
+
+    public void sendMessage(String msg, String recipient){
+
+        String res = recipient != null ? recipient : "";
+        String finalMsg = "!!MSG "+res+" "+msg;
+        sendMessage(finalMsg.replace("  ", " "));
+    }
+
+
+    public void setName(String showPanel) {
+        this.sendMessage("!!NAME "+ showPanel);
+    }
+
+    public void sendFile(String name, String filecontent, String recipient) {
+
+        sendMessage("!!FILE "+recipient+ " "+name+ " "+ filecontent);
+
     }
 }

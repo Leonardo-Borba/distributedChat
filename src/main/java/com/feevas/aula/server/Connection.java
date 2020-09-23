@@ -2,6 +2,8 @@ package com.feevas.aula.server;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.util.Random;
 
 public class Connection extends Thread {
 
@@ -16,6 +18,7 @@ public class Connection extends Thread {
         input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         output = new PrintWriter(socket.getOutputStream());
         this.socket = socket;
+        this.username = createRandomUserName();
     }
 
 
@@ -54,10 +57,7 @@ public class Connection extends Thread {
 
         if(!message.getSender().equals(this.getUsername())) {
             StringBuilder builder = new StringBuilder();
-            if(message.getRecipient() != null){
-                builder.append("whisper");
-                builder.append(" ");
-            }
+
             builder.append(message.getSender());
             builder.append(" ");
             if(message.getFilename() != null){
@@ -65,9 +65,22 @@ public class Connection extends Thread {
                 builder.append(" ");
             }
             builder.append(message.getContent());
-            output.println(builder.toString());
+            output.println(getMessagePrefix(message) + builder.toString());
             output.flush();
         }
+    }
+
+    private String getMessagePrefix(Message message) {
+        String retrn = "";
+        switch (message.getType()) {
+            case MESSAGE:
+                retrn = message.getWhisper() ? MessageType.WHISPER.getName() : MessageType.MESSAGE.getName();
+                break;
+            default:
+                retrn =  message.getType().getName();
+                break;
+        }
+        return retrn+ " ";
     }
 
     public String getUsername() {
@@ -78,5 +91,17 @@ public class Connection extends Thread {
         String[] mPieces = message.split("\\s+");
         this.username = mPieces[1];
 
+    }
+
+    private String createRandomUserName() {
+        String randomString = "";
+
+        final char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890".toCharArray();
+        final Random random = new Random();
+        for (int i = 0; i < 15; i++) {
+            randomString = randomString + chars[random.nextInt(chars.length)];
+        }
+
+        return randomString;
     }
 }

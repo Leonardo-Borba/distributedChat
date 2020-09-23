@@ -22,7 +22,7 @@ public class ConnectionCatcher extends Thread {
             Connection con = null;
             try {
                 con = new Connection(server.accept());
-                System.out.println("New com.feevas.aula.server.Connection registered");
+                System.out.println("New connection registered");
                 connections.add(con);
                 con.start();
             } catch (IOException e) {

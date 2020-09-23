@@ -7,12 +7,21 @@ public class Message {
     private String sender;
     private String filename;
     private boolean whisper;
+    private MessageType type;
 
     public Message(){}
 
     public Message(String msg, String sender) {
         content = msg;
         this.sender = sender;
+    }
+
+    public MessageType getType() {
+        return type;
+    }
+
+    public void setType(MessageType type) {
+        this.type = type;
     }
 
     public String getRecipient() {

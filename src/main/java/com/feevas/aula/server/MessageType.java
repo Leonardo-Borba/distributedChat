@@ -5,6 +5,7 @@ public enum MessageType {
     NAME("!!NAME"),
     MESSAGE("!!MSG"),
     FILE("!!FILE"),
+    WHISPER("!!WHISPER"),
     USERLIST("!!ULIST");
     private final String name;
 
